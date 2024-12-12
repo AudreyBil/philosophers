@@ -1,43 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 21:12:14 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/12 17:04:47 by abillote         ###   ########.fr       */
+/*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
+/*   Updated: 2024/12/12 17:54:54 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
-
-int	check_args(int argc, char **argv)
-{
-	int	i;
-
-	i = 1;
-	while (i < argc)
-	{
-		if (i == 1 && ft_atoi(argv[i]) < 1)
-		{
-			printf("Error: Your philosopher number is wrong\n");
-			return (1);
-		}
-		if (i == 5 && ft_atoi(argv[i]) < 0)
-		{
-			printf("Error: Your number of meals is wrong\n");
-			return (1);
-		}
-		if (i > 1 && i < 5 && ft_atoi(argv[i]) < 0)
-		{
-			printf("Error: One your of your time has a wrong value\n");
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
 
 int	init_data(t_rules *rules, t_philo **philos, int argc, char **argv)
 {
@@ -101,31 +74,4 @@ int	init_philo(t_philo *philos, t_rules *rules, t_fork *forks)
 		i++;
 	}
 	return (0);
-}
-
-int	main(int argc, char **argv)
-{
-	t_rules		rules;
-	t_philo		*philos;
-	pthread_t	*threads;
-	t_fork		*forks;
-
-	if (argc != 5 && argc != 6)
-	{
-		printf("Error : wrong number of arguments\n");
-		return (1);
-	}
-	if (check_args(argc, argv) != 0)
-		return (1);
-	if (init_data(&rules, &philos, argc, argv) != 0)
-		return (1);
-	if (init_philo(&philos, &rules, &forks) != 0)
-		return (1);
-	if (init_thread(&rules, &philos, &threads) != 0)
-		return (1);
-	free(philos);
-	free(threads);
-	free(forks);
-	//create threads
-	//free stuff
 }
