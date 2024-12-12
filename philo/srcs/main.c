@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:12:14 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/12 18:03:19 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:34:05 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ int	main(int argc, char **argv)
 {
 	t_rules		rules;
 	t_philo		*philos;
-	//pthread_t	*threads;
+	pthread_t	*threads;
 	t_fork		*forks;
+	int			i;
 
 	if (argc != 5 && argc != 6)
 	{
@@ -57,9 +58,12 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_philo(&philos, &rules, &forks) != 0)
 		return (1);
-	//if (init_thread(&rules, &philos, &threads) != 0)
-	//	return (1);
+	if (create_threads(&rules, &philos, &threads, &forks) != 0)
+		return (1);
+	i = 0;
+	while (i++ < rules.nb_of_philos)
+		pthread_join(threads[i], NULL);
 	free(philos);
-	//free(threads);
+	free(threads);
 	free(forks);
 }
