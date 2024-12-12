@@ -6,13 +6,13 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/12 17:54:54 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:04:48 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	init_data(t_rules *rules, t_philo **philos, int argc, char **argv)
+int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
 {
 	rules->nb_of_philos = ft_atoi(argv[1]);
 	rules->time_to_die = ft_atoi(argv[2]);
@@ -51,14 +51,14 @@ int	init_mutex(pthread_mutex_t *death_mutex, pthread_mutex_t *write_mutex, \
 	return (0);
 }
 
-int	init_philo(t_philo *philos, t_rules *rules, t_fork *forks)
+int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 {
 	pthread_mutex_t	death_mutex;
 	pthread_mutex_t	write_mutex;
 	int				i;
 
 	i = 0;
-	if (init_mutex(&death_mutex, &write_mutex, &forks, rules->nb_of_philos) \
+	if (init_mutex(&death_mutex, &write_mutex, forks, rules->nb_of_philos) \
 					!= 0)
 	{
 		free(philos);
@@ -66,11 +66,11 @@ int	init_philo(t_philo *philos, t_rules *rules, t_fork *forks)
 	}
 	while (i < rules->nb_of_philos)
 	{
-		philos[i].death_mutex = &death_mutex;
-		philos[i].write_mutex = &write_mutex;
-		philos[i].left_fork = &forks[i];
-		philos[i].right_fork = &forks[(i + 1) % rules->nb_of_philos];
-		philos[i].id = i;
+		philos[i]->death_mutex = &death_mutex;
+		philos[i]->write_mutex = &write_mutex;
+		philos[i]->left_fork = forks[i];
+		philos[i]->right_fork = forks[(i + 1) % rules->nb_of_philos];
+		philos[i]->id = i;
 		i++;
 	}
 	return (0);

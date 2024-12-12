@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/12 17:55:51 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:02:42 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ typedef struct s_philo {
 
 
 //init.c
-int	init_philo(t_philo *philos, t_rules *rules, t_fork *forks);
+int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks);
 int	init_mutex(pthread_mutex_t *death_mutex, pthread_mutex_t *write_mutex, \
 				t_fork **forks, int nb_philo);
-int	init_data(t_rules *rules, t_philo **philos, int argc, char **argv);
+int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv);
 
 //utils.c
 int	ft_atoi(const char *nptr);

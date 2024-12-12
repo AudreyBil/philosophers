@@ -3,7 +3,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 
 SRCS = srcs/main.c \
-	srcs/utils.c
+	srcs/utils.c	\
+	srcs/init.c
 
 OBJS = $(SRCS:.c=.o)
 
