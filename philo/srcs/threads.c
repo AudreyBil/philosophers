@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 18:27:28 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:35:02 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	*monitor_routine(void *arg)
 	i = 0;
 	while (1)
 	{
+		i = 0;
 		while (i < philos[0].rules->nb_of_philos)
 		{
 			if (check_death(&philos[i]))
@@ -87,5 +88,6 @@ int	create_threads(t_rules *rules, t_philo *philos, pthread_t *threads)
 	}
 	if (pthread_create(&monitor, NULL, monitor_routine, philos) != 0)
 		return (1);
+	pthread_detach(monitor);
 	return (0);
 }
