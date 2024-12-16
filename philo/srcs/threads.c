@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 17:08:50 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:27:28 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	check_death(t_philo *philo)
 	size_t	current_time;
 	pthread_mutex_lock(&philo->rules->death_mutex);
 	current_time = get_time_milliseconds();
+
 	if (philo->rules->someone_died || (current_time - \
 		philo->time_last_meal) > philo->rules->time_to_die)
 	{
@@ -30,6 +31,25 @@ int	check_death(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->rules->death_mutex);
 	return (0);
+}
+
+void	*monitor_routine(void *arg)
+{
+	t_philo	*philos;
+	int		i;
+
+	philos = (t_philo *)arg;
+	i = 0;
+	while (1)
+	{
+		while (i < philos[0].rules->nb_of_philos)
+		{
+			if (check_death(&philos[i]))
+				return NULL;
+			usleep(1000);
+			i++;
+		}
+	}
 }
 
 void	*philo_routine(void *arg)
@@ -54,7 +74,8 @@ void	*philo_routine(void *arg)
 
 int	create_threads(t_rules *rules, t_philo *philos, pthread_t *threads)
 {
-	int	i;
+	int			i;
+	pthread_t	monitor;
 
 	i = 0;
 	rules->start_time = get_time_milliseconds();
@@ -64,5 +85,7 @@ int	create_threads(t_rules *rules, t_philo *philos, pthread_t *threads)
 			return (1);
 		i++;
 	}
+	if (pthread_create(&monitor, NULL, monitor_routine, philos) != 0)
+		return (1);
 	return (0);
 }
