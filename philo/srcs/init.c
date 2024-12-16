@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 12:22:47 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 14:46:03 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
 	else
 		rules->nb_of_meals_needed = -1;
 	*philos = malloc(sizeof(t_philo) * rules->nb_of_philos);
-	if (!philos)
+	if (!*philos)
 		return (1);
 	return (0);
 }
@@ -39,7 +39,7 @@ int	init_mutex(pthread_mutex_t *death_mutex, pthread_mutex_t *write_mutex, \
 	if (pthread_mutex_init(write_mutex, NULL) != 0)
 		return (1);
 	*forks = malloc(sizeof(t_fork) * nb_philo);
-	if (!forks)
+	if (!*forks)
 		return (1);
 	while (i < nb_philo)
 	{
@@ -63,11 +63,11 @@ int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 		return (1);
 	while (i < rules->nb_of_philos)
 	{
-		philos[i]->death_mutex = &death_mutex;
-		philos[i]->write_mutex = &write_mutex;
-		philos[i]->left_fork = forks[i];
-		philos[i]->right_fork = forks[(i + 1) % rules->nb_of_philos];
-		philos[i]->id = i;
+		(*philos)[i].death_mutex = &death_mutex;
+		(*philos)[i].write_mutex = &write_mutex;
+		(*philos)[i].left_fork = &(*forks)[i];
+		(*philos)[i].right_fork = &(*forks)[(i + 1) % rules->nb_of_philos];
+		(*philos)[i].id = i;
 		i++;
 	}
 	return (0);
