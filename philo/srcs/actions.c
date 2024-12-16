@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:21:21 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 16:19:15 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:10:40 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,4 @@ void	philo_sleep(t_philo *philo)
 void	philo_think(t_philo *philo)
 {
 	print_action("is thinking", philo);
-	usleep(1000);
 }

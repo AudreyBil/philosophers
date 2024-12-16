@@ -6,11 +6,31 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 16:12:29 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:08:50 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+int	check_death(t_philo *philo)
+{
+	size_t	current_time;
+	pthread_mutex_lock(&philo->rules->death_mutex);
+	current_time = get_time_milliseconds();
+	if (philo->rules->someone_died || (current_time - \
+		philo->time_last_meal) > philo->rules->time_to_die)
+	{
+		if (!philo->rules->someone_died)
+		{
+			print_action("died", philo);
+			philo->rules->someone_died = 1;
+		}
+		pthread_mutex_unlock(&philo->rules->death_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->rules->death_mutex);
+	return (0);
+}
 
 void	*philo_routine(void *arg)
 {
@@ -20,8 +40,7 @@ void	*philo_routine(void *arg)
 	philo->time_last_meal = get_time_milliseconds();
 	if (philo->id % 2)
 		usleep(1000);
-	//while (!check_death(philo))
-	while (philo->meals_eaten < philo->rules->nb_of_meals_needed)
+	while (!check_death(philo))
 	{
 		philo_eat(philo);
 		if (philo->meals_eaten >= philo->rules->nb_of_meals_needed \
@@ -35,15 +54,12 @@ void	*philo_routine(void *arg)
 
 int	create_threads(t_rules *rules, t_philo *philos, pthread_t *threads)
 {
-	int	someone_died;
 	int	i;
 
-	someone_died = 0;
 	i = 0;
 	rules->start_time = get_time_milliseconds();
 	while (i < rules->nb_of_philos)
 	{
-		philos[i].someone_died = &someone_died;
 		if (pthread_create(&threads[i], NULL, philo_routine, &philos[i]) != 0)
 			return (1);
 		i++;

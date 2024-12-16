@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 16:12:49 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:48:18 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ typedef struct s_rules {
 	size_t			start_time;
 	pthread_mutex_t	write_mutex;
 	pthread_mutex_t	death_mutex;
+	int				someone_died;
 }	t_rules;
 
 typedef struct s_philo {
 	int				id;
 	size_t			time_last_meal;
 	int				meals_eaten;
-	int				*someone_died;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	struct s_rules	*rules;

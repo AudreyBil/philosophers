@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 16:03:53 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:48:14 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
 	rules->time_to_die = ft_atoi(argv[2]);
 	rules->time_to_eat = ft_atoi(argv[3]);
 	rules->time_to_sleep = ft_atoi(argv[4]);
+	rules->someone_died = 0;
 	if (argc == 6)
 		rules->nb_of_meals_needed = ft_atoi(argv[5]);
 	else
@@ -65,7 +66,6 @@ int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 		(*philos)[i].rules = rules;
 		(*philos)[i].meals_eaten = 0;
 		(*philos)[i].time_last_meal = 0;
-		(*philos)[i].someone_died = NULL;
 		i++;
 	}
 	return (0);
