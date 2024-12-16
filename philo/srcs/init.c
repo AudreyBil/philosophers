@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 14:46:03 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 14:59:40 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,9 @@ int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 		(*philos)[i].left_fork = &(*forks)[i];
 		(*philos)[i].right_fork = &(*forks)[(i + 1) % rules->nb_of_philos];
 		(*philos)[i].id = i;
+		(*philos)[i].rules = rules;
+		(*philos)[i].meals_eaten = 0;
+		(*philos)[i].time_last_meal = 0;
 		i++;
 	}
 	return (0);

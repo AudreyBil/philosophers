@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 11:55:25 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:02:39 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ size_t	get_time_milliseconds()
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-void	print_action(char *s, int philo_id)
+void	print_action(char *s, t_philo *philo)
 {
 	size_t	current_time;
 
 	current_time = get_time_milliseconds();
-	printf("%ld %d%s\n", current_time, philo_id, s);
+	printf("%ld %d%s\n", current_time - philo->rules->start_time, philo->id, s);
 }

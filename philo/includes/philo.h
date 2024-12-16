@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 12:26:24 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:02:59 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ typedef struct s_philo {
 	int				id;
 	size_t			time_last_meal;
 	int				meals_eaten;
-	int				eating_count;
 	int				*someone_died;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
@@ -64,6 +63,6 @@ void	philo_eat(t_philo *philo);
 //utils.c
 int		ft_atoi(const char *nptr);
 size_t	get_time_milliseconds();
-void	print_action(char *s, int philo_id);
+void	print_action(char *s, t_philo *philo);
 
 #endif
