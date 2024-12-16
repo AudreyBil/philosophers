@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 15:09:36 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:20:01 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ void	print_action(char *s, t_philo *philo)
 {
 	size_t	current_time;
 
+	pthread_mutex_lock(&philo->rules->write_mutex);
 	current_time = get_time_milliseconds();
-	printf("%ld %d%s\n", current_time - philo->rules->start_time, philo->id, s);
+	printf("%ld %d %s\n", current_time - philo->rules->start_time, \
+			philo->id, s);
+	pthread_mutex_unlock(&philo->rules->write_mutex);
 }

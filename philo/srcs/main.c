@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:12:14 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 14:46:58 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:02:16 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,10 @@ int	main(int argc, char **argv)
 	if (create_threads(&rules, philos, threads) != 0)
 		free_all(philos, forks, threads, EXIT_FAILURE);
 	i = 0;
-	while (i++ < rules.nb_of_philos)
+	while (i < rules.nb_of_philos)
+	{
 		pthread_join(threads[i], NULL);
+		i++;
+	}
 	free_all(philos, forks, threads, EXIT_SUCCESS);
 }

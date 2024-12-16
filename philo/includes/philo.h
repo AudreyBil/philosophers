@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 15:09:17 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:12:49 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@ typedef struct s_fork{
 }	t_fork;
 
 typedef struct s_rules {
-	int		nb_of_philos;
-	int		nb_of_meals_needed;
-	size_t	time_to_die;
-	size_t	time_to_eat;
-	size_t	time_to_sleep;
-	size_t	start_time;
+	int				nb_of_philos;
+	int				nb_of_meals_needed;
+	size_t			time_to_die;
+	size_t			time_to_eat;
+	size_t			time_to_sleep;
+	size_t			start_time;
+	pthread_mutex_t	write_mutex;
+	pthread_mutex_t	death_mutex;
 }	t_rules;
 
 typedef struct s_philo {
@@ -40,16 +42,13 @@ typedef struct s_philo {
 	int				*someone_died;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
-	pthread_mutex_t	*write_mutex;
-	pthread_mutex_t	*death_mutex;
 	struct s_rules	*rules;
 
 }	t_philo;
 
 //init.c
 int		init_philo(t_philo **philos, t_rules *rules, t_fork **forks);
-int		init_mutex(pthread_mutex_t *death_mutex, pthread_mutex_t *write_mutex, \
-				t_fork **forks, int nb_philo);
+int		init_mutex(t_rules *rules, t_fork **forks, int nb_philo);
 int		init_rules(t_rules *rules, t_philo **philos, int argc, char **argv);
 
 //threads.c
@@ -59,6 +58,8 @@ void	*philo_routine(void *arg);
 
 //actions.c
 void	philo_eat(t_philo *philo);
+void	philo_sleep(t_philo *philo);
+void	philo_think(t_philo *philo);
 
 //utils.c
 int		ft_atoi(const char *nptr);

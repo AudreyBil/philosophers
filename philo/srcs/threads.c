@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 15:08:37 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:12:29 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	*philo_routine(void *arg)
 		if (philo->meals_eaten >= philo->rules->nb_of_meals_needed \
 		&& philo->rules->nb_of_meals_needed != -1)
 			break ;
-		//philo_sleep(philo);
-		//philo_think(philo);
+		philo_sleep(philo);
+		philo_think(philo);
 	}
 	return (NULL);
 }

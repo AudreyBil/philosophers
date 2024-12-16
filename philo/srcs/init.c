@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 14:59:40 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:03:53 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,14 @@ int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
 	return (0);
 }
 
-int	init_mutex(pthread_mutex_t *death_mutex, pthread_mutex_t *write_mutex, \
-				t_fork **forks, int nb_philo)
+int	init_mutex(t_rules *rules, t_fork **forks, int nb_philo)
 {
 	int	i;
 
 	i = 0;
-	if (pthread_mutex_init(death_mutex, NULL) != 0)
+	if (pthread_mutex_init(&rules->death_mutex, NULL) != 0)
 		return (1);
-	if (pthread_mutex_init(write_mutex, NULL) != 0)
+	if (pthread_mutex_init(&rules->write_mutex, NULL) != 0)
 		return (1);
 	*forks = malloc(sizeof(t_fork) * nb_philo);
 	if (!*forks)
@@ -53,24 +52,20 @@ int	init_mutex(pthread_mutex_t *death_mutex, pthread_mutex_t *write_mutex, \
 
 int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 {
-	pthread_mutex_t	death_mutex;
-	pthread_mutex_t	write_mutex;
-	int				i;
+	int	i;
 
 	i = 0;
-	if (init_mutex(&death_mutex, &write_mutex, forks, rules->nb_of_philos) \
-					!= 0)
+	if (init_mutex(rules, forks, rules->nb_of_philos) != 0)
 		return (1);
 	while (i < rules->nb_of_philos)
 	{
-		(*philos)[i].death_mutex = &death_mutex;
-		(*philos)[i].write_mutex = &write_mutex;
 		(*philos)[i].left_fork = &(*forks)[i];
 		(*philos)[i].right_fork = &(*forks)[(i + 1) % rules->nb_of_philos];
 		(*philos)[i].id = i;
 		(*philos)[i].rules = rules;
 		(*philos)[i].meals_eaten = 0;
 		(*philos)[i].time_last_meal = 0;
+		(*philos)[i].someone_died = NULL;
 		i++;
 	}
 	return (0);
