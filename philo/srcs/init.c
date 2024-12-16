@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/12 18:04:48 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 12:22:47 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
 	rules->time_to_eat = ft_atoi(argv[3]);
 	rules->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		rules->nb_of_meals = ft_atoi(argv[5]);
+		rules->nb_of_meals_needed = ft_atoi(argv[5]);
 	else
-		rules->nb_of_meals = -1;
+		rules->nb_of_meals_needed = -1;
 	*philos = malloc(sizeof(t_philo) * rules->nb_of_philos);
 	if (!philos)
 		return (1);
@@ -60,10 +60,7 @@ int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 	i = 0;
 	if (init_mutex(&death_mutex, &write_mutex, forks, rules->nb_of_philos) \
 					!= 0)
-	{
-		free(philos);
 		return (1);
-	}
 	while (i < rules->nb_of_philos)
 	{
 		philos[i]->death_mutex = &death_mutex;

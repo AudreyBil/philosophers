@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/12 18:15:19 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 11:55:25 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,20 @@ int	ft_atoi(const char *nptr)
 	}
 	number *= sign;
 	return (number);
+}
+
+size_t	get_time_milliseconds()
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	print_action(char *s, int philo_id)
+{
+	size_t	current_time;
+
+	current_time = get_time_milliseconds();
+	printf("%ld %d%s\n", current_time, philo_id, s);
 }

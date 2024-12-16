@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:21:21 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/12 18:33:55 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 11:56:34 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	*philo_routine(void *arg)
+void	philo_eat(t_philo *philo)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)arg;
-	//get time for last meal
-	//something with odd numbers of philos
-	//loop while they are still alive
-	//eat / cehck nb of meals // sleep // think
-	return (NULL);
+	pthread_mutex_lock(&philo->left_fork->mutex);
+	print_action(" has taken a fork", philo->id);
+	pthread_mutex_lock(&philo->right_fork->mutex);
+	print_action(" has taken a fork", philo->id);
+	print_action(" is eating", philo->id);
+	usleep(philo->rules->time_to_eat * 1000);
+	philo->time_last_meal = get_time_milliseconds();
+	pthread_mutex_unlock(&philo->left_fork->mutex);
+	pthread_mutex_unlock(&philo->right_fork->mutex);
+	philo->meals_eaten++;
 }
