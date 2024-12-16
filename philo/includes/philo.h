@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 15:02:59 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:09:17 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int		init_mutex(pthread_mutex_t *death_mutex, pthread_mutex_t *write_mutex, \
 int		init_rules(t_rules *rules, t_philo **philos, int argc, char **argv);
 
 //threads.c
-int	create_threads(t_rules *rules, t_philo *philos, \
+int		create_threads(t_rules *rules, t_philo *philos, \
 					pthread_t *threads);
 void	*philo_routine(void *arg);
 
@@ -62,7 +62,7 @@ void	philo_eat(t_philo *philo);
 
 //utils.c
 int		ft_atoi(const char *nptr);
-size_t	get_time_milliseconds();
+size_t	get_time_milliseconds(void);
 void	print_action(char *s, t_philo *philo);
 
 #endif

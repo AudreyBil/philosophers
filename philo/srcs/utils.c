@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 15:02:39 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:09:36 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	ft_atoi(const char *nptr)
 	return (number);
 }
 
-size_t	get_time_milliseconds()
+size_t	get_time_milliseconds(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
