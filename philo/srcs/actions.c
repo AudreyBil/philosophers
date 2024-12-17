@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:21:21 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 18:26:58 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:23:19 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	philo_eat(t_philo *philo)
 	if (philo->rules->nb_of_philos == 1)
 	{
 		one_philo_eat(philo);
-		return;
+		return ;
 	}
 	if (philo->left_fork->fork_id < philo->right_fork->fork_id)
 	{

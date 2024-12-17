@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 18:35:02 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:23:32 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	check_death(t_philo *philo)
 {
 	size_t	current_time;
+
 	pthread_mutex_lock(&philo->rules->death_mutex);
 	current_time = get_time_milliseconds();
-
 	if (philo->rules->someone_died || (current_time - \
 		philo->time_last_meal) > philo->rules->time_to_die)
 	{
@@ -46,7 +46,7 @@ void	*monitor_routine(void *arg)
 		while (i < philos[0].rules->nb_of_philos)
 		{
 			if (check_death(&philos[i]))
-				return NULL;
+				return (NULL);
 			usleep(1000);
 			i++;
 		}
