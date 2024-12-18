@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/17 18:12:41 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:49:15 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	*philo_routine(void *arg);
 void	philo_eat(t_philo *philo);
 void	philo_sleep(t_philo *philo);
 void	philo_think(t_philo *philo);
+void    philosopher_wait(t_rules *rules, size_t wait_time);
+
 
 //utils.c
 int		ft_atoi(const char *nptr);

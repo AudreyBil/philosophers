@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:21:21 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/18 15:13:04 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/18 23:33:05 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ void	print_action(char *s, t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->rules->write_mutex);
 		current_time = get_time_milliseconds();
-		printf("%ld %d %s\n", current_time - philo->rules->start_time, \
-			philo->id, s);
+		printf("%ld %d %s\n", current_time - philo->rules->start_time, philo->id, s);
 		pthread_mutex_unlock(&philo->rules->write_mutex);
 	}
 }
@@ -35,6 +34,7 @@ void	one_philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->left_fork->mutex);
 	print_action("has taken a fork", philo);
+	usleep(philo->rules->time_to_die * 1000);
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 }
 
