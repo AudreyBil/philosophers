@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:12:14 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 16:02:16 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:55:32 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,24 @@
 
 void	free_all(t_philo *philos, t_fork *fork, pthread_t *threads, int status)
 {
+	int	i;
+
+	i = 0;
+	if (philos && philos[0].rules)
+		stop_simulation(philos[0].rules);
 	if (philos)
+	{
+		while (i < philos[0].rules->nb_of_philos)
+		{
+			pthread_mutex_destroy(&philos[i].time_last_meal_mutex);
+			pthread_mutex_destroy(&philos[i].left_fork->mutex);
+			i++;
+		}
+		pthread_mutex_destroy(&philos[0].rules->stop_mutex);
+		pthread_mutex_destroy(&philos[0].rules->death_mutex);
+		pthread_mutex_destroy(&philos[0].rules->write_mutex);
 		free(philos);
+	}
 	if (fork)
 		free(fork);
 	if (threads)
@@ -87,5 +103,6 @@ int	main(int argc, char **argv)
 		pthread_join(threads[i], NULL);
 		i++;
 	}
+	stop_simulation(&rules);
 	free_all(philos, forks, threads, EXIT_SUCCESS);
 }

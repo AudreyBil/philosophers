@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/17 13:23:32 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:26:11 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,23 @@
 int	check_death(t_philo *philo)
 {
 	size_t	current_time;
+	size_t	last_meal;
 
-	pthread_mutex_lock(&philo->rules->death_mutex);
+	pthread_mutex_lock(&philo->time_last_meal_mutex);
+	last_meal = philo->time_last_meal;
+	pthread_mutex_unlock(&philo->time_last_meal_mutex);
 	current_time = get_time_milliseconds();
+	pthread_mutex_lock(&philo->rules->death_mutex);
 	if (philo->rules->someone_died || (current_time - \
-		philo->time_last_meal) > philo->rules->time_to_die)
+		last_meal) > philo->rules->time_to_die)
 	{
 		if (!philo->rules->someone_died)
 		{
-			print_action("died", philo);
 			philo->rules->someone_died = 1;
+			pthread_mutex_lock(&philo->rules->write_mutex);
+			printf("%ld %d %s\n", current_time - philo->rules->start_time, \
+			philo->id, "died");
+			pthread_mutex_unlock(&philo->rules->write_mutex);
 		}
 		pthread_mutex_unlock(&philo->rules->death_mutex);
 		return (1);
@@ -40,17 +47,21 @@ void	*monitor_routine(void *arg)
 
 	philos = (t_philo *)arg;
 	i = 0;
-	while (1)
+	while (!is_simulation_stopped(philos[0].rules))
 	{
 		i = 0;
 		while (i < philos[0].rules->nb_of_philos)
 		{
 			if (check_death(&philos[i]))
+			{
+				stop_simulation(philos[0].rules);
 				return (NULL);
+			}
 			usleep(1000);
 			i++;
 		}
 	}
+	return (NULL);
 }
 
 void	*philo_routine(void *arg)
@@ -58,17 +69,24 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	pthread_mutex_lock(&philo->time_last_meal_mutex);
 	philo->time_last_meal = get_time_milliseconds();
+	pthread_mutex_unlock(&philo->time_last_meal_mutex);
 	if (philo->id % 2)
 		usleep(1000);
-	while (!check_death(philo))
+	while (!is_simulation_stopped(philo->rules))
 	{
 		philo_eat(philo);
 		if (philo->meals_eaten >= philo->rules->nb_of_meals_needed \
 		&& philo->rules->nb_of_meals_needed != -1)
+		{
+			stop_simulation(philo->rules);
 			break ;
-		philo_sleep(philo);
-		philo_think(philo);
+		}
+		if (!is_simulation_stopped(philo->rules))
+			philo_sleep(philo);
+		if (!is_simulation_stopped(philo->rules))
+			philo_think(philo);
 	}
 	return (NULL);
 }

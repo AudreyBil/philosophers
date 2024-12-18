@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:21:21 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/17 13:23:19 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:13:04 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,33 @@
 void	print_action(char *s, t_philo *philo)
 {
 	size_t	current_time;
+	int		can_print;
 
-	pthread_mutex_lock(&philo->rules->write_mutex);
-	current_time = get_time_milliseconds();
-	if (philo->rules->someone_died == 0)
+	pthread_mutex_lock(&philo->rules->death_mutex);
+	can_print = (philo->rules->someone_died == 0);
+	pthread_mutex_unlock(&philo->rules->death_mutex);
+
+	if (can_print)
+	{
+		pthread_mutex_lock(&philo->rules->write_mutex);
+		current_time = get_time_milliseconds();
 		printf("%ld %d %s\n", current_time - philo->rules->start_time, \
 			philo->id, s);
-	pthread_mutex_unlock(&philo->rules->write_mutex);
+		pthread_mutex_unlock(&philo->rules->write_mutex);
+	}
 }
 
 void	one_philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->left_fork->mutex);
 	print_action("has taken a fork", philo);
-	usleep(philo->rules->time_to_eat * 1000);
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 }
 
 void	philo_eat(t_philo *philo)
 {
 	if (philo->rules->nb_of_philos == 1)
-	{
-		one_philo_eat(philo);
-		return ;
-	}
+		return (one_philo_eat(philo));
 	if (philo->left_fork->fork_id < philo->right_fork->fork_id)
 	{
 		pthread_mutex_lock(&philo->left_fork->mutex);
@@ -53,7 +56,9 @@ void	philo_eat(t_philo *philo)
 	}
 	print_action("has taken a fork", philo);
 	print_action("is eating", philo);
+	pthread_mutex_lock(&philo->time_last_meal_mutex);
 	philo->time_last_meal = get_time_milliseconds();
+	pthread_mutex_unlock(&philo->time_last_meal_mutex);
 	usleep(philo->rules->time_to_eat * 1000);
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->right_fork->mutex);

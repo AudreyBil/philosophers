@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 18:27:40 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:12:07 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,21 @@ size_t	get_time_milliseconds(void)
 
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+int	is_simulation_stopped(t_rules *rules)
+{
+	int	stopped;
+
+	pthread_mutex_lock(&rules->stop_mutex);
+	stopped = rules->stop_simulation;
+	pthread_mutex_unlock(&rules->stop_mutex);
+	return (stopped);
+}
+
+void	stop_simulation(t_rules *rules)
+{
+	pthread_mutex_lock(&rules->stop_mutex);
+	rules->stop_simulation = 1;
+	pthread_mutex_unlock(&rules->stop_mutex);
 }

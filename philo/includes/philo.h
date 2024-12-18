@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/16 16:48:18 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:12:41 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,14 @@ typedef struct s_rules {
 	pthread_mutex_t	write_mutex;
 	pthread_mutex_t	death_mutex;
 	int				someone_died;
+	int				stop_simulation;
+	pthread_mutex_t	stop_mutex;
 }	t_rules;
 
 typedef struct s_philo {
 	int				id;
 	size_t			time_last_meal;
+	pthread_mutex_t	time_last_meal_mutex;
 	int				meals_eaten;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
@@ -65,5 +68,7 @@ void	philo_think(t_philo *philo);
 int		ft_atoi(const char *nptr);
 size_t	get_time_milliseconds(void);
 void	print_action(char *s, t_philo *philo);
+void	stop_simulation(t_rules *rules);
+int		is_simulation_stopped(t_rules *rules);
 
 #endif
