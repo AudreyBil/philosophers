@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:12:14 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/20 12:30:52 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:48:09 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	free_all(t_philo *philos, t_fork *fork, pthread_t *threads, int status)
 		stop_simulation(philos[0].rules);
 	if (philos)
 	{
-		while (i < philos[0].rules->nb_of_philos)
+		while (i < philos[0].rules->nbphilos)
 		{
-			pthread_mutex_destroy(&philos[i].time_last_meal_mutex);
+			pthread_mutex_destroy(&philos[i].last_meal_mutex);
 			pthread_mutex_destroy(&philos[i].left_fork->mutex);
 			i++;
 		}
@@ -68,7 +68,7 @@ int	check_args(int argc, char **argv)
 			printf("Error: Your number of meals is wrong\n");
 			return (1);
 		}
-		if (i > 1 && i < 5 && ft_atoi(argv[i]) < 0)
+		if (i > 1 && i < 5 && ft_atoi(argv[i]) <= 0)
 		{
 			printf("Error: One your of your time has a wrong value\n");
 			return (1);
@@ -92,13 +92,13 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_philo(&philos, &rules, &forks) != 0)
 		return (free_all(philos, forks, NULL, EXIT_FAILURE));
-	threads = malloc(sizeof(pthread_t) * rules.nb_of_philos);
+	threads = malloc(sizeof(pthread_t) * rules.nbphilos);
 	if (!threads)
 		return (free_all(philos, forks, threads, EXIT_FAILURE));
 	if (create_threads(&rules, philos, threads) != 0)
 		return (free_all(philos, forks, threads, EXIT_FAILURE));
 	i = 0;
-	while (i < rules.nb_of_philos)
+	while (i < rules.nbphilos)
 	{
 		pthread_join(threads[i], NULL);
 		i++;

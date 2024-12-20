@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/20 12:51:56 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:53:08 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ typedef struct s_fork{
 }	t_fork;
 
 typedef struct s_rules {
-	int				nb_of_philos;
+	int				nbphilos;
 	int				nb_meals;
-	size_t			time_to_die;
+	size_t			t_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
 	size_t			start_time;
@@ -40,8 +40,8 @@ typedef struct s_rules {
 
 typedef struct s_philo {
 	int				id;
-	size_t			time_last_meal;
-	pthread_mutex_t	time_last_meal_mutex;
+	size_t			last_meal;
+	pthread_mutex_t	last_meal_mutex;
 	int				eaten;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
@@ -60,7 +60,6 @@ int		create_threads(t_rules *rules, t_philo *philos, \
 void	*philo_routine(void *arg);
 int		check_death(t_philo *philo);
 
-
 //actions.c
 void	philo_eat(t_philo *philo);
 void	philo_sleep(t_philo *philo);
@@ -68,9 +67,9 @@ void	philo_think(t_philo *philo);
 
 //utils.c
 int		ft_atoi(const char *nptr);
-size_t	get_time_ms(void);
+size_t	get_t(void);
 void	print_action(char *s, t_philo *philo);
 void	stop_simulation(t_rules *rules);
-int		is_simulation_stopped(t_rules *rules);
+int		stopped(t_rules *rules);
 
 #endif

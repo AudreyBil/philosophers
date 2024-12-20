@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/20 12:30:56 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:49:47 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_atoi(const char *nptr)
 	return (number);
 }
 
-size_t	get_time_ms(void)
+size_t	get_t(void)
 {
 	struct timeval	tv;
 
@@ -46,7 +46,7 @@ size_t	get_time_ms(void)
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-int	is_simulation_stopped(t_rules *rules)
+int	stopped(t_rules *rules)
 {
 	int	stopped;
 
