@@ -6,13 +6,13 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:12:14 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/18 23:33:02 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:30:52 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	free_all(t_philo *philos, t_fork *fork, pthread_t *threads, int status)
+int	free_all(t_philo *philos, t_fork *fork, pthread_t *threads, int status)
 {
 	int	i;
 
@@ -36,7 +36,7 @@ void	free_all(t_philo *philos, t_fork *fork, pthread_t *threads, int status)
 		free(fork);
 	if (threads)
 		free(threads);
-	exit(status);
+	return (status);
 }
 
 int	check_number_args(int argc)
@@ -91,12 +91,12 @@ int	main(int argc, char **argv)
 	if (init_rules(&rules, &philos, argc, argv) != 0)
 		return (1);
 	if (init_philo(&philos, &rules, &forks) != 0)
-		free_all(philos, forks, NULL, EXIT_FAILURE);
+		return (free_all(philos, forks, NULL, EXIT_FAILURE));
 	threads = malloc(sizeof(pthread_t) * rules.nb_of_philos);
 	if (!threads)
-		free_all(philos, forks, threads, EXIT_FAILURE);
+		return (free_all(philos, forks, threads, EXIT_FAILURE));
 	if (create_threads(&rules, philos, threads) != 0)
-		free_all(philos, forks, threads, EXIT_FAILURE);
+		return (free_all(philos, forks, threads, EXIT_FAILURE));
 	i = 0;
 	while (i < rules.nb_of_philos)
 	{
@@ -104,5 +104,5 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	stop_simulation(&rules);
-	free_all(philos, forks, threads, EXIT_SUCCESS);
+	return (free_all(philos, forks, threads, EXIT_SUCCESS));
 }

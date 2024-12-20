@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/18 23:32:58 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:30:56 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_atoi(const char *nptr)
 	return (number);
 }
 
-size_t	get_time_milliseconds(void)
+size_t	get_time_ms(void)
 {
 	struct timeval	tv;
 

@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/18 23:33:04 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:30:50 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
 	rules->someone_died = 0;
 	rules->stop_simulation = 0;
 	if (argc == 6)
-		rules->nb_of_meals_needed = ft_atoi(argv[5]);
+		rules->nb_meals = ft_atoi(argv[5]);
 	else
-		rules->nb_of_meals_needed = -1;
-	if (rules->nb_of_meals_needed == 0)
+		rules->nb_meals = -1;
+	if (rules->nb_meals == 0)
 		return (1);
 	*philos = malloc(sizeof(t_philo) * rules->nb_of_philos);
 	if (!*philos)
@@ -71,7 +71,7 @@ int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 		(*philos)[i].right_fork = &(*forks)[(i + 1) % rules->nb_of_philos];
 		(*philos)[i].id = i + 1;
 		(*philos)[i].rules = rules;
-		(*philos)[i].meals_eaten = 0;
+		(*philos)[i].eaten = 0;
 		(*philos)[i].time_last_meal = 0;
 		i++;
 	}

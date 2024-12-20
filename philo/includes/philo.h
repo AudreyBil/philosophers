@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/18 17:49:15 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:51:56 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_fork{
 
 typedef struct s_rules {
 	int				nb_of_philos;
-	int				nb_of_meals_needed;
+	int				nb_meals;
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
@@ -42,7 +42,7 @@ typedef struct s_philo {
 	int				id;
 	size_t			time_last_meal;
 	pthread_mutex_t	time_last_meal_mutex;
-	int				meals_eaten;
+	int				eaten;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	struct s_rules	*rules;
@@ -58,17 +58,17 @@ int		init_rules(t_rules *rules, t_philo **philos, int argc, char **argv);
 int		create_threads(t_rules *rules, t_philo *philos, \
 					pthread_t *threads);
 void	*philo_routine(void *arg);
+int		check_death(t_philo *philo);
+
 
 //actions.c
 void	philo_eat(t_philo *philo);
 void	philo_sleep(t_philo *philo);
 void	philo_think(t_philo *philo);
-void    philosopher_wait(t_rules *rules, size_t wait_time);
-
 
 //utils.c
 int		ft_atoi(const char *nptr);
-size_t	get_time_milliseconds(void);
+size_t	get_time_ms(void);
 void	print_action(char *s, t_philo *philo);
 void	stop_simulation(t_rules *rules);
 int		is_simulation_stopped(t_rules *rules);

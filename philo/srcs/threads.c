@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/18 23:33:00 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:44:44 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	check_death(t_philo *philo)
 
 	pthread_mutex_lock(&philo->time_last_meal_mutex);
 	last_meal = philo->time_last_meal;
+	current_time = get_time_ms();
 	pthread_mutex_unlock(&philo->time_last_meal_mutex);
-	current_time = get_time_milliseconds();
 	pthread_mutex_lock(&philo->rules->death_mutex);
 	if (philo->rules->someone_died || (current_time - \
-		last_meal) > philo->rules->time_to_die)
+		last_meal) >= philo->rules->time_to_die - 1)
 	{
 		if (!philo->rules->someone_died)
 		{
@@ -50,7 +50,7 @@ void	*monitor_routine(void *arg)
 	while (!is_simulation_stopped(philos[0].rules))
 	{
 		i = 0;
-		while (i < philos[0].rules->nb_of_philos)
+		while (i < philos[0].rules->nb_of_philos && !is_simulation_stopped(philos[0].rules))
 		{
 			if (check_death(&philos[i]))
 			{
@@ -66,27 +66,27 @@ void	*monitor_routine(void *arg)
 
 void	*philo_routine(void *arg)
 {
-	t_philo	*philo;
+	t_philo	*ph;
 
-	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->time_last_meal_mutex);
-	philo->time_last_meal = get_time_milliseconds();
-	pthread_mutex_unlock(&philo->time_last_meal_mutex);
-	if (philo->id % 2)
+	ph = (t_philo *)arg;
+	pthread_mutex_lock(&ph->time_last_meal_mutex);
+	ph->time_last_meal = get_time_ms();
+	pthread_mutex_unlock(&ph->time_last_meal_mutex);
+	if (ph->id % 2)
 		usleep(1000);
-	while (!is_simulation_stopped(philo->rules))
+	while (!is_simulation_stopped(ph->rules))
 	{
-		philo_eat(philo);
-		if (philo->meals_eaten >= philo->rules->nb_of_meals_needed \
-		&& philo->rules->nb_of_meals_needed != -1)
+		if ((get_time_ms() - ph->time_last_meal) < ph->rules->time_to_die)
+			philo_eat(ph);
+		if (ph->eaten >= ph->rules->nb_meals && ph->rules->nb_meals != -1)
 		{
-			stop_simulation(philo->rules);
+			stop_simulation(ph->rules);
 			break ;
 		}
-		if (!is_simulation_stopped(philo->rules))
-			philo_sleep(philo);
-		if (!is_simulation_stopped(philo->rules))
-			philo_think(philo);
+		if (!is_simulation_stopped(ph->rules) && (get_time_ms() - ph->time_last_meal) < ph->rules->time_to_die)
+			philo_sleep(ph);
+		if (!is_simulation_stopped(ph->rules) && (get_time_ms() - ph->time_last_meal) < ph->rules->time_to_die)
+			philo_think(ph);
 	}
 	return (NULL);
 }
@@ -97,7 +97,7 @@ int	create_threads(t_rules *rules, t_philo *philos, pthread_t *threads)
 	pthread_t	monitor;
 
 	i = 0;
-	rules->start_time = get_time_milliseconds();
+	rules->start_time = get_time_ms();
 	while (i < rules->nb_of_philos)
 	{
 		if (pthread_create(&threads[i], NULL, philo_routine, &philos[i]) != 0)
