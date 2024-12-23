@@ -6,13 +6,13 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/20 13:48:09 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:35:53 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
+int	init_rules(t_rules *rules, int argc, char **argv)
 {
 	rules->nbphilos = ft_atoi(argv[1]);
 	rules->t_die = ft_atoi(argv[2]);
@@ -26,8 +26,8 @@ int	init_rules(t_rules *rules, t_philo **philos, int argc, char **argv)
 		rules->nb_meals = -1;
 	if (rules->nb_meals == 0)
 		return (1);
-	*philos = malloc(sizeof(t_philo) * rules->nbphilos);
-	if (!*philos)
+	rules->philos = malloc(sizeof(t_philo) * rules->nbphilos);
+	if (!rules->philos)
 		return (1);
 	return (0);
 }
@@ -66,6 +66,8 @@ int	init_philo(t_philo **philos, t_rules *rules, t_fork **forks)
 	while (i < rules->nbphilos)
 	{
 		if (pthread_mutex_init(&(*philos)[i].last_meal_mutex, NULL) != 0)
+			return (1);
+		if (pthread_mutex_init(&(*philos)[i].meal_count_mutex, NULL) != 0)
 			return (1);
 		(*philos)[i].left_fork = &(*forks)[i];
 		(*philos)[i].right_fork = &(*forks)[(i + 1) % rules->nbphilos];

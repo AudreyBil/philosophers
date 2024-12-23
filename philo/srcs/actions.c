@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:21:21 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/20 13:53:03 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/23 19:01:57 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,21 @@ void	philo_eat(t_philo *ph)
 	ph->last_meal = get_t();
 	pthread_mutex_unlock(&ph->last_meal_mutex);
 	usleep(ph->rules->time_to_eat * 1000);
-	ph->eaten++;
 	pthread_mutex_unlock(&ph->right_fork->mutex);
 	pthread_mutex_unlock(&ph->left_fork->mutex);
 }
 
 void	philo_sleep(t_philo *ph)
 {
-	print_action("is sleeping", ph);
-	usleep(ph->rules->time_to_sleep * 1000);
+	if (!check_all_ate(ph->rules))
+	{
+		print_action("is sleeping", ph);
+		usleep(ph->rules->time_to_sleep * 1000);
+	}
 }
 
 void	philo_think(t_philo *ph)
 {
-	print_action("is thinking", ph);
+	if (!check_all_ate(ph->rules))
+		print_action("is thinking", ph);
 }

@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/20 13:49:13 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/23 19:30:45 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,24 @@ int	check_death(t_philo *philo)
 
 void	*monitor_routine(void *arg)
 {
-	t_philo	*ph;
+	t_rules	*rules;
 	int		i;
 
-	ph = (t_philo *)arg;
+	rules = (t_rules *)arg;
 	i = 0;
-	while (!stopped(ph[0].rules))
+	while (!stopped(rules))
 	{
-		i = 0;
-		while (i < ph[0].rules->nbphilos && !stopped(ph[0].rules))
+		if (check_all_ate(rules))
 		{
-			if (check_death(&ph[i]))
+			stop_simulation(rules);
+			return (NULL);
+		}
+		i = 0;
+		while (i < rules->nbphilos && !stopped(rules))
+		{
+			if (check_death(&rules->philos[i]))
 			{
-				stop_simulation(ph[0].rules);
+				stop_simulation(rules);
 				return (NULL);
 			}
 			usleep(1000);
@@ -73,15 +78,15 @@ void	*philo_routine(void *arg)
 	ph->last_meal = get_t();
 	pthread_mutex_unlock(&ph->last_meal_mutex);
 	if (ph->id % 2)
-		usleep(1000);
+		usleep(15000);
 	while (!stopped(ph->rules))
 	{
 		if ((get_t() - ph->last_meal) < ph->rules->t_die)
-			philo_eat(ph);
-		if (ph->eaten >= ph->rules->nb_meals && ph->rules->nb_meals != -1)
 		{
-			stop_simulation(ph->rules);
-			break ;
+			philo_eat(ph);
+			pthread_mutex_lock(&ph->meal_count_mutex);
+			ph->eaten++;
+			pthread_mutex_unlock(&ph->meal_count_mutex);
 		}
 		if (!stopped(ph->rules) && (get_t() - ph->last_meal) < ph->rules->t_die)
 			philo_sleep(ph);
@@ -104,7 +109,7 @@ int	create_threads(t_rules *rules, t_philo *philos, pthread_t *threads)
 			return (1);
 		i++;
 	}
-	if (pthread_create(&monitor, NULL, monitor_routine, philos) != 0)
+	if (pthread_create(&monitor, NULL, monitor_routine, rules) != 0)
 		return (1);
 	pthread_detach(monitor);
 	return (0);

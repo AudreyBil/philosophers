@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/20 13:49:47 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:41:00 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,24 @@ void	stop_simulation(t_rules *rules)
 	pthread_mutex_lock(&rules->stop_mutex);
 	rules->stop_simulation = 1;
 	pthread_mutex_unlock(&rules->stop_mutex);
+}
+
+int	check_all_ate(t_rules *rules)
+{
+	int	i;
+	int	all_ate;
+
+	if (rules->nb_meals < 0)
+		return (0);
+	i = 0;
+	while (i < rules->nbphilos)
+	{
+		pthread_mutex_lock(&rules->philos[i].meal_count_mutex);
+		all_ate = (rules->philos[i].eaten >= rules->nb_meals);
+		pthread_mutex_unlock(&rules->philos[i].meal_count_mutex);
+		if (!all_ate)
+			return (0);
+		i++;
+	}
+	return (1);
 }
