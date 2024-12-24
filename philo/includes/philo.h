@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/23 18:17:32 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/24 13:06:19 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-struct	s_rules;
-struct	s_philo;
-typedef struct	s_philo t_philo;
+struct					s_rules;
+struct					s_philo;
+typedef struct s_philo	t_philo;
 
 typedef struct s_fork{
 	pthread_mutex_t	mutex;
