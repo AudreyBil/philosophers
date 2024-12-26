@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/26 10:17:05 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/26 11:36:21 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ void	*monitor_routine(void *arg)
 	while (1)
 	{
 		sem_wait(philo->rules->eater);
-		if (philo->eating_count >= philo->rules->nb_meals && philo->rules->nb_meals > 0)
+		if (philo->eating_count >= philo->rules->nb_meals \
+			&& philo->rules->nb_meals > 0)
 		{
 			sem_post(philo->rules->eater);
 			break ;
@@ -66,7 +67,7 @@ void	philo_routine(t_rules *rules, t_philo *ph)
 	ph->last_meal = get_t();
 	pthread_create(&ph->monitor_thread, NULL, monitor_routine, ph);
 	if (ph->id % 2)
-		usleep(15000);
+		usleep(50000);
 	while (1)
 	{
 		philo_eat(ph);

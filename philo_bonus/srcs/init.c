@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:54:27 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/25 19:23:45 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/26 11:21:49 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,17 @@ int	init_sem(t_rules *rules)
 	sem_unlink("writer");
 	sem_unlink("forks");
 	sem_unlink("eater");
-	if ((rules->deather = sem_open("deather", O_CREAT, S_IRWXU, 1)) == SEM_FAILED)
+	rules->deather = sem_open("deather", O_CREAT, S_IRWXU, 1);
+	if (rules->deather == SEM_FAILED)
 		return (1);
-	if ((rules->writer = sem_open("writer", O_CREAT, S_IRWXU, 1)) == SEM_FAILED)
+	rules->writer = sem_open("writer", O_CREAT, S_IRWXU, 1);
+	if (rules->writer == SEM_FAILED)
 		return (1);
-	if ((rules->forks = sem_open("forks", O_CREAT, S_IRWXU, rules->nbphilos)) == SEM_FAILED)
+	rules->forks = sem_open("forks", O_CREAT, S_IRWXU, rules->nbphilos);
+	if (rules->forks == SEM_FAILED)
 		return (1);
-	if ((rules->eater = sem_open("eater", O_CREAT, S_IRWXU, 1)) == SEM_FAILED)
+	rules->eater = sem_open("eater", O_CREAT, S_IRWXU, 1);
+	if (rules->eater == SEM_FAILED)
 		return (1);
 	return (0);
 }

@@ -6,7 +6,8 @@ SRCS = srcs/main.c \
 	srcs/utils.c	\
 	srcs/init.c		\
 	srcs/process.c	\
-	srcs/actions.c
+	srcs/actions.c	\
+	srcs/clean.c
 
 OBJS = $(SRCS:.c=.o)
 

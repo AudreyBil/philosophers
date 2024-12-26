@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/25 19:23:04 by abillote         ###   ########.fr       */
+/*   Updated: 2024/12/26 11:27:05 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_philo {
 	pthread_t		monitor_thread;
 	int				eating_count;
 	struct s_rules	*rules;
-
 }	t_philo;
 
 typedef struct s_rules {
@@ -71,12 +70,13 @@ void	philo_sleep(t_philo *philo);
 void	philo_think(t_philo *philo);
 void	print_action(char *s, t_philo *ph);
 
-
 //utils.c
 int		ft_atoi(const char *nptr);
 size_t	get_t(void);
-void	stop_simulation(t_rules *rules);
-int		stopped(t_rules *rules);
-int		check_all_ate(t_rules *rules);
+
+//clean.c
+void	clean_sem(t_rules *rules);
+int		free_all(t_rules *rules, int status);
+void	kill_processes(t_rules *rules);
 
 #endif
