@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:40:04 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/23 18:41:00 by abillote         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:33:18 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,21 @@ int	check_all_ate(t_rules *rules)
 	i = 0;
 	while (i < rules->nbphilos)
 	{
-		pthread_mutex_lock(&rules->philos[i].meal_count_mutex);
+		pthread_mutex_lock(&rules->philos[i].last_meal_mutex);
 		all_ate = (rules->philos[i].eaten >= rules->nb_meals);
-		pthread_mutex_unlock(&rules->philos[i].meal_count_mutex);
+		pthread_mutex_unlock(&rules->philos[i].last_meal_mutex);
 		if (!all_ate)
 			return (0);
 		i++;
 	}
 	return (1);
+}
+
+void	precise_sleep(size_t time)
+{
+	size_t	start;
+
+	start = get_t();
+	while (get_t() - start < time)
+		usleep(500);
 }

@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 21:14:29 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/24 13:06:19 by abillote         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:41:59 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int		create_threads(t_rules *rules, t_philo *philos, \
 					pthread_t *threads);
 void	*philo_routine(void *arg);
 int		check_death(t_philo *philo);
+void	*one_philo_eat(t_philo *ph);
 
 //actions.c
 void	philo_eat(t_philo *philo);
@@ -78,5 +79,6 @@ void	print_action(char *s, t_philo *philo);
 void	stop_simulation(t_rules *rules);
 int		stopped(t_rules *rules);
 int		check_all_ate(t_rules *rules);
+void	precise_sleep(size_t time);
 
 #endif

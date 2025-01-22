@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:21:21 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/23 19:01:57 by abillote         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:59:30 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 void	print_action(char *s, t_philo *ph)
 {
 	size_t	current_time;
-	int		can_print;
+	// int		can_print;
 
-	pthread_mutex_lock(&ph->rules->death_mutex);
-	can_print = (ph->rules->someone_died == 0);
-	pthread_mutex_unlock(&ph->rules->death_mutex);
-	if (can_print)
+	// pthread_mutex_lock(&ph->rules->death_mutex);
+	// can_print = (ph->rules->someone_died == 0);
+	// pthread_mutex_unlock(&ph->rules->death_mutex);
+	if (!stopped(ph->rules))
 	{
 		pthread_mutex_lock(&ph->rules->write_mutex);
 		current_time = get_t();
@@ -29,18 +29,19 @@ void	print_action(char *s, t_philo *ph)
 	}
 }
 
-void	one_philo_eat(t_philo *ph)
+void	*one_philo_eat(t_philo *ph)
 {
 	pthread_mutex_lock(&ph->left_fork->mutex);
 	print_action("has taken a fork", ph);
-	usleep(ph->rules->t_die * 1000);
+	precise_sleep(ph->rules->t_die);
+	print_action("died", ph);
 	pthread_mutex_unlock(&ph->left_fork->mutex);
+	stop_simulation(ph->rules);
+	return (NULL);
 }
 
 void	philo_eat(t_philo *ph)
 {
-	if (ph->rules->nbphilos == 1)
-		return (one_philo_eat(ph));
 	if (ph->left_fork->fork_id < ph->right_fork->fork_id)
 	{
 		pthread_mutex_lock(&ph->left_fork->mutex);

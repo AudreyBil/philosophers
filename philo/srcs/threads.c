@@ -6,7 +6,7 @@
 /*   By: abillote <abillote@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 18:06:19 by abillote          #+#    #+#             */
-/*   Updated: 2024/12/23 19:30:45 by abillote         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:59:50 by abillote         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,38 @@
 
 int	check_death(t_philo *philo)
 {
-	size_t	current_time;
-	size_t	last_meal;
-
 	pthread_mutex_lock(&philo->last_meal_mutex);
-	last_meal = philo->last_meal;
-	current_time = get_t();
-	pthread_mutex_unlock(&philo->last_meal_mutex);
-	pthread_mutex_lock(&philo->rules->death_mutex);
-	if (philo->rules->someone_died || (current_time - \
-		last_meal) >= philo->rules->t_die - 1)
+	if (get_t() - philo->last_meal > philo->rules->t_die)
 	{
-		if (!philo->rules->someone_died)
-		{
-			philo->rules->someone_died = 1;
-			pthread_mutex_lock(&philo->rules->write_mutex);
-			printf("%ld %d %s\n", current_time - philo->rules->start_time, \
-			philo->id, "died");
-			pthread_mutex_unlock(&philo->rules->write_mutex);
-		}
-		pthread_mutex_unlock(&philo->rules->death_mutex);
+		pthread_mutex_unlock(&philo->last_meal_mutex);
+		print_action("died", philo);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->rules->death_mutex);
+	pthread_mutex_unlock(&philo->last_meal_mutex);
+// 	size_t	current_time;
+// 	size_t	last_meal;
+
+
+	// pthread_mutex_lock(&philo->last_meal_mutex);
+	// last_meal = philo->last_meal;
+	// current_time = get_t();
+	// pthread_mutex_unlock(&philo->last_meal_mutex);
+	// pthread_mutex_lock(&philo->rules->death_mutex);
+	// if (philo->rules->someone_died || (current_time - \
+	// 	last_meal) >= philo->rules->t_die)
+	// {
+	// 	if (!philo->rules->someone_died)
+	// 	{
+	// 		philo->rules->someone_died = 1;
+	// 		pthread_mutex_lock(&philo->rules->write_mutex);
+	// 		printf("%ld %d %s\n", current_time - philo->rules->start_time, \
+	// 		philo->id, "died");
+	// 		pthread_mutex_unlock(&philo->rules->write_mutex);
+	// 	}
+	// 	pthread_mutex_unlock(&philo->rules->death_mutex);
+	// 	return (1);
+	// }
+	// pthread_mutex_unlock(&philo->rules->death_mutex);
 	return (0);
 }
 
@@ -69,29 +78,49 @@ void	*monitor_routine(void *arg)
 	return (NULL);
 }
 
+
+void	philo_actions(t_philo *ph)
+{
+	if (ph->left_fork->fork_id < ph->right_fork->fork_id)
+	{
+		pthread_mutex_lock(&ph->left_fork->mutex);
+		pthread_mutex_lock(&ph->right_fork->mutex);
+	}
+	else
+	{
+		pthread_mutex_lock(&ph->right_fork->mutex);
+		pthread_mutex_lock(&ph->left_fork->mutex);
+	}
+	print_action("has taken a fork", ph);
+	print_action("has taken a fork", ph);
+	pthread_mutex_lock(&ph->last_meal_mutex);
+	print_action("is eating", ph);
+	ph->last_meal = get_t();
+	ph->eaten += 1;
+	pthread_mutex_unlock(&ph->last_meal_mutex);
+	precise_sleep(ph->rules->time_to_eat);
+	pthread_mutex_unlock(&ph->left_fork->mutex);
+	pthread_mutex_unlock(&ph->right_fork->mutex);
+	print_action("is sleeping", ph);
+	precise_sleep(ph->rules->time_to_sleep);
+	print_action("is thinking", ph);
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philo	*ph;
 
 	ph = (t_philo *)arg;
+	if (ph->id % 2 == 0)
+		precise_sleep(1);
 	pthread_mutex_lock(&ph->last_meal_mutex);
 	ph->last_meal = get_t();
 	pthread_mutex_unlock(&ph->last_meal_mutex);
-	if (ph->id % 2)
-		usleep(15000);
+	if (ph->rules->nbphilos == 1)
+		return (one_philo_eat(ph));
 	while (!stopped(ph->rules))
 	{
-		if ((get_t() - ph->last_meal) < ph->rules->t_die)
-		{
-			philo_eat(ph);
-			pthread_mutex_lock(&ph->meal_count_mutex);
-			ph->eaten++;
-			pthread_mutex_unlock(&ph->meal_count_mutex);
-		}
-		if (!stopped(ph->rules) && (get_t() - ph->last_meal) < ph->rules->t_die)
-			philo_sleep(ph);
-		if (!stopped(ph->rules) && (get_t() - ph->last_meal) < ph->rules->t_die)
-			philo_think(ph);
+		philo_actions(ph);
 	}
 	return (NULL);
 }
@@ -109,8 +138,11 @@ int	create_threads(t_rules *rules, t_philo *philos, pthread_t *threads)
 			return (1);
 		i++;
 	}
-	if (pthread_create(&monitor, NULL, monitor_routine, rules) != 0)
-		return (1);
-	pthread_detach(monitor);
+	if (rules->nbphilos > 1)
+	{
+		if (pthread_create(&monitor, NULL, monitor_routine, rules) != 0)
+			return (1);
+		pthread_detach(monitor);
+	}
 	return (0);
 }
