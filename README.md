@@ -1,4 +1,7 @@
 # philosophers
+![Philosophers](https://img.shields.io/badge/42-philosophers-blue)
+![C](https://img.shields.io/badge/Language-C-brightgreen)
+![Multithreading](https://img.shields.io/badge/Multithreading-Pthreads-red)
 
 **Overview**
 
